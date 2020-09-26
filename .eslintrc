@@ -1,0 +1,16 @@
+{
+    "parser": "babel-eslint", // Парсится babel ом и тут мне непонятно как быть с ESLint
+    "env": {
+        "ES6": true,
+        "browser": true,
+        "node": true
+    },
+    "rules": { //  Тут исправляем правла ESLint подключен он щас вроде нет, подключить его можно будет в webpack.config.js смотри код внизу и необходимо проверить и установить все пакеты соответственно, сперва проверить какие устанвлены, потом добавить недостающие
+        "semi": "off",
+        "arrow-parens": "off", // Добавил эти правила из Видео, но рабочего ESlint в тот момент не видел
+        "comma-dangle": "off",
+        "require-jsdoc": "off" // так избаляемся от правил
+    },
+    "extends": ["eslint:recommended", "google"] // https://github.com/google/eslint-config-google Установленный и подключённый тут пакет, 
+        
+}
