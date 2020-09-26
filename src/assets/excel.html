@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <title>Excel on JS Welcome</title>
+</head>
+<body>
+    <div id="app" class="container">
+
+        <div class="excel">
+
+            <div class="excel__header"> <!-- Через наследование стилей будем создавать инпуты -->
+
+                <input type="text" class="input" value="New Table"/> <!-- Тут простое плавило, что простые стили не задаём -->
+
+                <!-- Тут же добавим кнопки-->
+                <div>
+
+                    <div class="button">
+                        <i class="material-icons">delete</i>
+                    </div>
+
+                    <div class="button">
+                        <i class="material-icons">exit_to_app</i>
+                    </div>
+
+                </div>
+
+            </div> <!--  BEM __ 2 нижних подчёркивания в именах стилей-->
+            
+            <div class="excel__toolbar">
+
+                <div class="button">
+                    <i class="material-icons">format_align_left</i>
+                </div>
+
+                <div class="button">
+                    <i class="material-icons">format_align_center</i>
+                </div>
+
+                <div class="button">
+                    <i class="material-icons">format_align_right</i>
+                </div>
+
+                <div class="button">
+                    <i class="material-icons">format_bold</i>
+                </div>
+
+                <div class="button">
+                    <i class="material-icons">format_italic</i>
+                </div>
+
+                <div class="button">
+                    <i class="material-icons">format_underlined</i>
+                </div>
+
+            </div>
+
+            <div class="excel__formula">
+
+                <div class="info">fx</div> <!-- Короткие имена классов создали так как наследуется от класса excel__formula и соответственно в именах пересечений не будет-->
+                <div class="input" contenteditable="true" spellcheck="false"></div> <!-- Тут DIV как инпут создан, для корректной работы -->
+
+            </div>
+
+            <div class="excel__table">
+
+                <div class="row"> <!-- Данный Div отвечает только за 1 у столб в таблице-->
+
+                    <div class="row-info">
+
+                    </div>
+
+                    <div class="row-data"> <!-- Отвечает за все остальные столбы кроме первой-->
+                        <div class="column"> <!-- А далее динамически будем получать в этой строке BCD и т.д.-->
+                            A
+                        </div>
+                        <div class="column"> <!-- Эти B and C добавили джля наглядности и для понимания в разработке-->
+                            B
+                        </div>
+                        <div class="column"> 
+                            C
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row"> <!-- Данный Div отвечает только за 1 у строчку в таблице-->
+                    <div class="row-info">
+                        1
+                    </div>
+
+                    <div class="row-data"> <!-- Отвечает за все остальные ячейки кроме первой-->
+                       <div class="cell selected" contenteditable="">A1</div>
+                       <div class="cell" contenteditable="">B1</div>
+                       <div class="cell" contenteditable="">C1</div>
+                    </div>
+
+                </div>
+
+
+                <div class="row"> <!-- Данный Div отвечает только за 1 у строчку в таблице-->
+                    <div class="row-info">
+                        2
+                    </div>
+
+                    <div class="row-data"> <!-- Отвечает за все остальные ячейки кроме первой-->
+                       <div class="cell">A2</div>
+                       <div class="cell">B2</div>
+                       <div class="cell">C2</div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>    
+</body>
+</html>

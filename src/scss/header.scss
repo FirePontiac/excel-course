@@ -1,0 +1,28 @@
+@import "variables";
+@import "mixins";
+
+.excel__header { // & - означает обращение к верхнему селектору
+    position: absolute;top: 0;right: 0;left: 0;height: $header-height;padding: 8px 4px 0;display: flex; justify-content: space-between;
+    // Temp
+    // background: antiquewhite; Фон для Этотого обьекта на странице дабы видеть его реальные границы и пересечения, только для разработки
+
+    & .input { // Так более наглядно видно что идёт наследование стилей !
+        margin:0; padding: 2px 7px; min-width:1px; color:rgb(238, 102, 102); border: 1px solid transparent; // transparent - т.е. пока не нажимаем её нет
+        border-radius: 2px; height: 20px; font-size:18px;line-height:22px;
+        outline: none;
+
+        &:hover { // Такой порядок должен быть, иначе поведение на страце некорректно
+            border: 1px solid $border-color;
+        }
+
+        &:focus {
+            border: 2px solid #1a73e8;
+        }
+
+        
+    }
+
+    & .button {
+        @include button(red);
+    }
+}

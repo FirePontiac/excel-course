@@ -1,0 +1,63 @@
+@import "variables";
+@import "mixins";
+
+.excel__table {
+    position: absolute;left: 0;right: 0;
+    top: $header-height + $toolbar-height + $formula-height;
+    overflow-x: auto; // Для скрола по горизонтали
+    overflow-y: auto; // Для скрола по вертикали
+    padding-bottom: 2px;
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        min-height: 20px;
+        height: $row-height;
+    }
+    .row-info {
+        display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
+        justify-content: center;
+        align-items: center;
+        min-width: $info-sel-width;
+        height: 100%;
+        border: 1px solid $border-color;
+        background: #f8f9fa;
+        border-top: none;
+    }
+    .row-data {
+        display: flex; // Для того чтобы элементы ложились в линию (по умолчанию они по вертикали)
+
+    }
+
+    .column { // Отвечает только за буквы сверху
+        display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
+        justify-content: center;
+        align-items: center;
+        background: #f8f9fa;
+        min-width: 40px;
+        width: $sell-width;
+        border: 1px solid $border-color;
+        height: 100%;
+        border-top:0;
+        border-left:0;
+    }
+
+    .cell {
+        min-width: 40px;
+        padding: 5px;
+        width: $sell-width;
+        height: 100%;
+        border: 1px solid #e2e3e3;
+        border-top:0;
+        border-left:0;
+        color:#111;
+        white-space: nowrap; // Так как потом в каждом Cell мы будем что прописывать
+        outline:none;
+
+        &.selected { // Наследуемый класс для выделенной в текущей момент времени ячейки
+            border: none;
+            outline: 2px solid #3c74ff;
+            z-index: 2;
+        }
+    }
+}
