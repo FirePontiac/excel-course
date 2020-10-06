@@ -1,5 +1,5 @@
 const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -10,8 +10,8 @@ const isDev = !isProd // npm i -D cross-env ; Эти 2 переменные те
 // в packge.json изменяем // было "start": "webpack",; в json добавили "start": "cross-env NODE_ENV=development webpack", и 9 ую тоже поменя строку
 
 
-console.log('IS PROD', isProd)
-console.log('IS DEV', isDev)
+// console.log('IS PROD', isProd)
+// console.log('IS DEV', isDev)
 
 const filename = ext => isDev ? `bundle.${ext}` : `bundle.[hash].${ext}` // Для того чтобы убрать bundle.[hash].css например, чтобы без hash было, можно и isProd брать, без разницы
 
@@ -20,7 +20,8 @@ const jsLoaders = () => { // Она ничего не принимает, и в�
           {      
               loader: 'babel-loader', // Заботится о поддержке другими браузерами
               options: {
-                presets: ['@babel/preset-env']
+                presets: ['@babel/preset-env'],
+                plugins: ['@babel/plugin-proposal-class-properties'], // Это добавили для пооддержки нестандартных имён классов
               } 
             }
           ]
@@ -35,7 +36,7 @@ const jsLoaders = () => { // Она ничего не принимает, и в�
 module.exports = {
     context: path.resolve(__dirname, 'src'), // Webpack будет смотреть теперь  всё в папке src
     mode: 'development',
-    entry: ['@babel/polyfill','./index.js'], // Так то тут обьект; Добавили полифилы, теперь должны в браузере работать async, await, bug ушёл, проблеммы со стилями остались
+    entry: ['@babel/polyfill','./index.js'],// Так то тут обьект; Добавили полифилы, теперь должны в браузере работать async, await, bug ушёл, проблеммы со стилями остались
     output: {
         //  было filename: 'bundle.[hash].js', // Файл где находятся все JS скрипты; тут добавляются хеши : 'bundle.[hash].js'
         filename: filename('js'), // Таким образом в строке 14 создав уловие мы пользуемся режимами
@@ -75,15 +76,23 @@ module.exports = {
               collapseWhitespace: isProd // В HTML удалить пробелы
             }
           }), // Папку src не указывает, т.к. есть context: path.resolve(__dirname, 'src'),
-        new CopyPlugin({ // Ох как я зае...лся когда первый плагин подключал
-            patterns: [ // Используем для переноски фавикона
-              { 
-                // from: 'source', to: 'dest' },
-                // { from: 'other', to: 'public' },
-                from: path.resolve(__dirname, 'src/favicon.ico'), 
-                to: path.resolve(__dirname, 'dist')  }, // в 'dist' для того чтобы вв процессе разработки тоже присутствовал этот файл
-            ],
+
+        
+          new CopyPlugin({ // Ох как я зае...лся когда первый плагин подключал
+              patterns: [ // Используем для переноски фавикона
+                { 
+                  from: path.resolve(__dirname, 'src/favicon.ico'), 
+                  to: path.resolve(__dirname, 'dist')  }, // в 'dist' для того чтобы вв процессе разработки тоже присутствовал этот файл
+              ],
           }),
+
+          // new CopyPlugin([ 
+          //     { 
+          //       from: path.resolve(__dirname, 'src/favicon.ico'), 
+          //       to: path.resolve(__dirname, 'dist')  
+          //     } // в 'dist' для того чтобы вв процессе разработки тоже присутствовал этот файл
+          //   ]), // В идеале так должно работать
+
           new MiniCssExtractPlugin({
               filename: filename('css')
           })
@@ -110,7 +119,8 @@ module.exports = {
 
 
           {
-            test: /\.m?js$/,
+            // Было test: /\.m?js$/,
+            test: /\.js$/,
             exclude: /node_modules/,
             use: jsLoaders() // Тут через функцию получаем лоадеры
             }
