@@ -31,11 +31,13 @@ export class Excel {
 
             // Debugging ; Вынесем component в глобальную область видимости
 
-            if (component.name) { // Если определил имя компонента
-                window['c' + component.name] = component // Debug; пока что только для обьекта Formula задали c + name; т.е. cFormula в консоли браузера
-                // window.cFormula.destroy в консоли браузера; Тут важно понять как работает метод Bind и у том месте где собитие создаётся
-                // Обрати внимание на метод bind в файле DomListener 
-            }
+
+            // Закоментили это git flow
+            // if (component.name) { // Если определил имя компонента
+            //     window['c' + component.name] = component // Debug; пока что только для обьекта Formula задали c + name; т.е. cFormula в консоли браузера
+            //     // window.cFormula.destroy в консоли браузера; Тут важно понять как работает метод Bind и у том месте где собитие создаётся
+            //     // Обрати внимание на метод bind в файле DomListener 
+            // }
 
 
             $el.html(component.toHTML()) // Отрефакторили 25 строку
