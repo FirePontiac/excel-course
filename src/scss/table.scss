@@ -15,6 +15,7 @@
         height: $row-height;
     }
     .row-info {
+        position: relative;
         display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
         justify-content: center;
         align-items: center;
@@ -30,6 +31,7 @@
     }
 
     .column { // Отвечает только за буквы сверху
+        position: relative; // Это связано с resize элементами .col-resize { в частности тут
         display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
         justify-content: center;
         align-items: center;
@@ -56,8 +58,56 @@
 
         &.selected { // Наследуемый класс для выделенной в текущей момент времени ячейки
             border: none;
-            outline: 2px solid #3c74ff;
+            outline: 2px solid $primary-color;
             z-index: 2;
+        }
+    }
+
+
+
+    // Обьединение Стилей под 1 селектор
+    .col-resize, .row-resize { // Это Делается для почти одинаковых описаний классов стилей, для избежания дублирования кода
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: $primary-color;
+        opacity: 0; 
+        z-index: 1000;
+
+        &:hover {
+            opacity: 1!important; // При наведении
+        }
+    }
+
+
+
+    .col-resize {
+        // position: absolute;
+        top: 0;
+        // bottom: 0;
+        // right: 0;
+        // opacity: 0; // Для Этого элемента, так как он по умолчания должен быть невидим, только при наведении мыши
+        width: 4px;
+        // background: $primary-color;
+
+        &:hover {
+            // opacity: 1; // При наведении
+            cursor: col-resize; // Изменение вида курсора при наведении
+        }
+    }
+
+    .row-resize { 
+        // position: absolute;
+        // right: 0; // Порядок важен
+        left: 0;
+        // bottom: 0;
+        // opacity: 0; // Для Этого элемента, так как он по умолчания должен быть невидим, только при наведении мыши
+        height: 4px;
+        // background: $primary-color;
+
+        &:hover {
+            // opacity: 1; // При наведении
+            cursor: row-resize; // Изменение вида курсора при наведении
         }
     }
 }

@@ -1,12 +1,19 @@
 import {ExcelComponent} from '@core/ExcelComponent'
 import {createTable} from '@/components/table/table.template'
-
+// import {$} from '@core/dom' Этот импорт получается уже лишним
+import {resizeHandler} from '@/components/table/table.resize'
+import {shouldResize} from '@/components/table/table.functions'
 export class Table extends ExcelComponent {
     static className = 'excel__table'
-
-    toHTML() {
-        // А тут будем вызывать метод createTable() Т.е. функцию из файла table.template.js
-        // В скобки createTable() можно передавать количество строк и получать таблицу гораздо большего размера
-        return createTable(20) // Тут будем оперировать обычными строчками которые будем генерировать     
+    constructor($root) {
+      super ($root, {
+         listeners: ['mousedown'] 
+      })   
+    }
+    toHTML() { return createTable(20) }
+    onMousedown(event) {
+      if (shouldResize(event)) { // shouldResize(event) Экспортировали её из table.function.js
+        resizeHandler(this.$root, event)
+      }
     }
 }
