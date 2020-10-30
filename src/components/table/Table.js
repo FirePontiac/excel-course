@@ -19,6 +19,7 @@ export class Table extends ExcelComponent {
       listeners: ['mousedown', 'keydown'],
       ...options, // Описание в Formula.js; ...options, Для родительского класса развернуто так
     });
+    // this.unsubs = [] // Создали Массив с подписчиками; этот вариант без фреймворка           
   }
   toHTML() {
     return createTable(20);
@@ -33,11 +34,21 @@ export class Table extends ExcelComponent {
     const $cell = this.$root.find('[data-id="0:0"]');
     this.selection.select($cell);
     // Тут про Emitter
-    this.emitter.subscribe('it is working', (text) => {
+    // Без фреймворка можно const unsub = this.emitter.subscribe('it is working', (text) => {
+    // Было this.emitter.subscribe('it is working', (text) => {
+          this.$on('formula:input', (text) => {
+
+      // Далее чтобы отписаться от этого события? надо воспользоваться другим методом, который еще не описан
+      // но соответственно надо:
+      // const unsub = this.emitter.subscribe ..... (text) => {
+      // И потом это передать в метод desrtroy
       this.selection.current.text(text); // Это тот класс где храниться текущий выбранный элемент; current - переменная класса DOM
       // Далее в dom.js создадим метод text
-      console.log('Table from Formula', text);
+      // console.log('Table from Formula', text);
     });
+    // Подписок будет куча; ниже тоже реализация без фреймворка
+    // this.unsubs.push(unsub) // В массив запихиваем новое отписавшоеся событие
+    // Эти вещи должны делаться в автоматическом режиме? и следуем писать меньше кода который относиться к этому
   }
   onMousedown(event) {
     if (shouldResize(event)) {
@@ -73,4 +84,9 @@ export class Table extends ExcelComponent {
       this.selection.select($next);
     }
   }
+// destroy() { // Так можно было реализовать, но у нас есть свой фреймворк для такого рода вещей
+//   super.destroy() 
+//   this.unsubs.forEach(unsub => unsub()) //То есть уничтожаем после вызова
+// }
 }
+

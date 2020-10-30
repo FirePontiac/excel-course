@@ -33,4 +33,8 @@ export class Excel {
     this.$el.append(this.getRoot()); // Тут всё вставляется в DOM дерево
     this.components.forEach((component) => component.init()); // В этот момент времени компонент уже инициализируется
   }
+  
+  destroy() {
+    this.components.forEach(component => component.destroy()) // Массивом по каждому компоненту, и у каждого destroy
+  }
 }

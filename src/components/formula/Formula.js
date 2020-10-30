@@ -22,7 +22,9 @@ export class Formula extends ExcelComponent {
     // console.log(this.$root);
     const text = event.target.textContent.trim(); // text = тому что в данный момент находится в поле formula
     // console.log('Formula: onInput', event.target.textContent.trim());
-    this.emitter.emit('it is working', text); // Сюда можно передавать абсолютно любую строку
+    // было this.emitter.emit('it is working', text); // Сюда можно передавать абсолютно любую строку
+    this.$emit('formula:input', text); // Стало к примеру когда дописали в ExcelComponent новый паттерн
+  
   }
 
   //   onClick(event) {
