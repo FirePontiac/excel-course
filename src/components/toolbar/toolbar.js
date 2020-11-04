@@ -3,10 +3,9 @@ export class Toolbar extends ExcelComponent {
   static className = 'excel__toolbar';
   constructor($root, options) {
     super($root, {
-      // Описание в Formula.js
       name: 'toolbar',
-      listeners: ['click'],
-      ...options, // Описание в Formula.js
+      // listeners: ['click'],
+      ...options,
     });
   }
   toHTML() {
@@ -31,7 +30,7 @@ export class Toolbar extends ExcelComponent {
                 </div>
         `;
   }
-  onClick(event) {
-    console.log(event.target);
-  }
+  // onClick(event) {
+  //   console.log(event.target);
+  // }
 }

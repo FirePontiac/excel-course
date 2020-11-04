@@ -2,7 +2,6 @@ import { ExcelComponent } from '@core/ExcelComponent';
 export class Header extends ExcelComponent {
   static className = 'excel__header';
   constructor($root, options) {
-    // Сериализуем сразу, тут его не было, Описание в Formula.js
     super($root, {
       name: 'Header',
       ...options,

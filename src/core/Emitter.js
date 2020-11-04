@@ -1,6 +1,4 @@
 export class Emitter {
-  // Важно чтобы этот Observer был единым для всех компонентов внутри Excel.js
-  // Для этого в Excel.js смотри что сотворим!
   constructor() {
     this.listeners = {};
   }

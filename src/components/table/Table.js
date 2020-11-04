@@ -13,43 +13,46 @@ import { TableSelection } from '@/components/table/TableSelection';
 export class Table extends ExcelComponent {
   static className = 'excel__table';
   constructor($root, options) {
-    // Описание в Formula.js
     super($root, {
       name: 'Table',
-      listeners: ['mousedown', 'keydown'],
-      ...options, // Описание в Formula.js; ...options, Для родительского класса развернуто так
+      listeners: ['mousedown', 'keydown', 'input'],
+      ...options,
     });
-    // this.unsubs = [] // Создали Массив с подписчиками; этот вариант без фреймворка           
   }
+
   toHTML() {
     return createTable(20);
   }
 
   prepare() {
     this.selection = new TableSelection();
-    // console.log('Prepare');
   }
+
   init() {
     super.init();
-    const $cell = this.$root.find('[data-id="0:0"]');
-    this.selection.select($cell);
-    // Тут про Emitter
-    // Без фреймворка можно const unsub = this.emitter.subscribe('it is working', (text) => {
-    // Было this.emitter.subscribe('it is working', (text) => {
-          this.$on('formula:input', (text) => {
-
-      // Далее чтобы отписаться от этого события? надо воспользоваться другим методом, который еще не описан
-      // но соответственно надо:
-      // const unsub = this.emitter.subscribe ..... (text) => {
-      // И потом это передать в метод desrtroy
-      this.selection.current.text(text); // Это тот класс где храниться текущий выбранный элемент; current - переменная класса DOM
-      // Далее в dom.js создадим метод text
-      // console.log('Table from Formula', text);
+    // Было const $cell = this.$root.find('[data-id="0:0"]');
+    this.selectCell(this.$root.find('[data-id="0:0"]'));
+    // this.selection.select($cell);
+    // Было this.$emit('table:select', $next); // Повторил для Кейса когда из таблицы надо сто то сложить в LocalStorage или на Сервер
+    // this.$emit('table:select', $cell); В новый метод переместили
+    this.$on('formula:input', (text) => {
+      this.selection.current.text(text);
     });
-    // Подписок будет куча; ниже тоже реализация без фреймворка
-    // this.unsubs.push(unsub) // В массив запихиваем новое отписавшоеся событие
-    // Эти вещи должны делаться в автоматическом режиме? и следуем писать меньше кода который относиться к этому
+
+    this.$on('formula:done', () => {
+      // Реализовали сброс фокуса с поля формулы на ячейку таблицы куда вводили из формулы
+      this.selection.current.focus();
+    });
   }
+
+  // Убераем дулирование кода:
+  // this.selection.select($cell); и
+  // this.$emit('table:select', $cell); Так оно уже дублируется в 2 х методах
+  selectCell($cell) {
+    this.selection.select($cell);
+    this.$emit('table:select', $cell);
+  }
+
   onMousedown(event) {
     if (shouldResize(event)) {
       resizeHandler(this.$root, event);
@@ -81,12 +84,13 @@ export class Table extends ExcelComponent {
       const id = this.selection.current.id(true);
       event.preventDefault();
       const $next = this.$root.find(nextSelection(key, id));
-      this.selection.select($next);
+      this.selectCell($next);
+      // this.selection.select($next); // $next Тут выбираем новую ячейку
+      // this.$emit('table:select', $next); // Эмитим то ячейку с которой рботаем
     }
   }
-// destroy() { // Так можно было реализовать, но у нас есть свой фреймворк для такого рода вещей
-//   super.destroy() 
-//   this.unsubs.forEach(unsub => unsub()) //То есть уничтожаем после вызова
-// }
-}
 
+  onInput(event) {
+    this.$emit('table:input', $(event.target)); // event.target - $ - обёрнутый в DOM класс
+  }
+}

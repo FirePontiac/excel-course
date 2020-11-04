@@ -14,8 +14,16 @@ class Dom {
   }
 
   text(text) {
-    // Попозже допишем это что он работал как Геттер и сеттер на фоне HTML
-    this.$el.textContent = text; // Сюда на данном этепе присвоем тот текст который тут же и получаем
+    if (typeof text === 'string') {
+      this.$el.textContent = text;
+      return this; // Это если текст есть то так поступаем
+    }
+    // А если текста нет, то:
+    // С Input строка снизу не сработает, поэтому добавим проверку:
+    if (this.$el.tagName.toLowerCase() === 'input') {
+      return this.$el.value.trim();
+    }
+    return this.$el.textContent.trim();
   }
 
   clear() {
@@ -78,14 +86,18 @@ class Dom {
   }
   addClass(className) {
     this.$el.classList.add(className);
+    return this;
   }
   removeClass(className) {
     this.$el.classList.remove(className);
+    return this;
   }
 }
+
 export function $(selector) {
   return new Dom(selector);
 }
+
 $.create = (tagName, classes = '') => {
   const el = document.createElement(tagName);
   if (classes) {
