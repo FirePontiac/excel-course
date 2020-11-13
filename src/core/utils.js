@@ -11,3 +11,11 @@ export function range(start, end) {
   }
   return new Array(end - start + 1).fill('').map((_, index) => start + index);
 }
+
+export function storage(key, data = null) {
+  // Сдлеаем как геттер и сеттер одновременно
+  if (!data) {
+    return JSON.parse(localStorage.getItem(key)); // Если нет данных парсим то что в LocalStorage
+  }
+  localStorage.setItem(key, JSON.stringify(data)); // Если есть данные, закидываем их
+}

@@ -9,6 +9,7 @@ import {
   matrix,
 } from '@/components/table/table.functions';
 import { TableSelection } from '@/components/table/TableSelection';
+import * as actions from '@/redux/actions';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -43,6 +44,10 @@ export class Table extends ExcelComponent {
       // Реализовали сброс фокуса с поля формулы на ячейку таблицы куда вводили из формулы
       this.selection.current.focus();
     });
+
+    // this.$subscribe((state) => {
+    //   console.log('TableState', state); // А тут уже тестируемый state выводим
+    // });
   }
 
   // Убераем дулирование кода:
@@ -51,11 +56,31 @@ export class Table extends ExcelComponent {
   selectCell($cell) {
     this.selection.select($cell);
     this.$emit('table:select', $cell);
+    // Тут протестируем взаимодействие со store; сам store описан в Excel.js и в ExcelComponent.js
+    // this.$dispatch({ type: 'TEST' }); // Задали в выбранной ячейке
+  }
+
+  async resizeTable(event) {
+    // Вставляем async; await дабы обработать промис
+    try {
+      const data = await resizeHandler(this.$root, event); // Восользуемся Promice; так как это асинхронное событие, и когда ресайз завершиться, диспатчить в store
+      // Было this.$dispatch({ type: 'TABLE_RESIZE', data }); // PayLoad ? Чтобы это не значило; Это сам готовый action !!!
+      this.$dispatch(actions.tableResize(data));
+      console.log('Resize Data', data); //
+    } catch (e) {
+      console.warn('Как это так ?!', e.message);
+    }
   }
 
   onMousedown(event) {
     if (shouldResize(event)) {
-      resizeHandler(this.$root, event);
+      // Было resizeHandler(this.$root, event); // Это надо диспатчить в store; это ещё у нас зависит от table.resize.js; поэтому:
+
+      // resizeHandler(this.$root, event, () => {
+      //   this.$dispatch(); //    Так можно через callback, но это не современно !
+      // });
+      // Поэтому создадим новую функцию выше
+      this.resizeTable(event);
     } else if (isCell(event)) {
       const $target = $(event.target);
       if (event.shiftKey) {
@@ -64,7 +89,8 @@ export class Table extends ExcelComponent {
         );
         this.selection.selectGroup($cells);
       } else {
-        this.selection.select($target);
+        // Было this.selection.select($target);
+        this.selectCell($target);
       }
     }
   }

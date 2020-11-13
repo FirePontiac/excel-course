@@ -30,6 +30,10 @@ export class Formula extends ExcelComponent {
       // Это для того что мы ввели в Table ячейке, отобразилось в Формуле
       this.$formula.text($cell.text());
     });
+
+    this.$subscribe((state) => {
+      console.log('FormulaState', state); // А тут уже тестируемый state выводим
+    });
   }
 
   onInput(event) {
