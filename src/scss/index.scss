@@ -1,35 +1,34 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
-@import "~normalize.css"; // Подключили Библиотеку
+@import '~normalize.css'; // Подключили Библиотеку
 
-@import "header";
-@import "toolbar";
-@import "formula";
-@import "table";
-@import "dashboard";
-
-
+@import 'header';
+@import 'toolbar';
+@import 'formula';
+@import 'table';
+@import 'dashboard';
 
 // Будем Юзать BEM, т.к. в CSS есть проблемма в больших проектах, конфликты с именами классов
 
 // Далее просто пишем тут стили
 
-* { // Изначально такие настройки стилей, потом уже смотри на макет
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  // Изначально такие настройки стилей, потом уже смотри на макет
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Roboto', sans-serif; // sans-serif; подключаем если вдруг не будет работать Roboto
-    font-size: 12px;
+  font-family: 'Roboto', sans-serif; // sans-serif; подключаем если вдруг не будет работать Roboto
+  font-size: 12px;
 }
 
-.excel { // Исходный класс
-    position: relative; // Для того чтобы внутренние блоки отталкивались от родительского
-    color: #888; // Цвет для элементов таблицы в т.ч. для значка формулы
-    height: 100%;
-    max-width: 100%; // Оч важный параметр , для того чтобы больше чем ширина экрана Excel не мог в себя принимать величину
-    // 30 ая строчка для того чтобы горизонтальный скролл появлялся
-    font-size: .8rem;
+.excel {
+  // Исходный класс
+  position: relative; // Для того чтобы внутренние блоки отталкивались от родительского
+  color: #888; // Цвет для элементов таблицы в т.ч. для значка формулы
+  height: 100%;
+  max-width: 100%; // Оч важный параметр , для того чтобы больше чем ширина экрана Excel не мог в себя принимать величину
+  // 30 ая строчка для того чтобы горизонтальный скролл появлялся
+  font-size: 0.8rem;
 }
-

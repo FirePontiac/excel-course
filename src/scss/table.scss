@@ -1,113 +1,105 @@
-@import "variables";
-@import "mixins";
+@import 'variables';
+@import 'mixins';
 
 .excel__table {
-    position: absolute;left: 0;right: 0;
-    top: $header-height + $toolbar-height + $formula-height;
-    overflow-x: auto; // Для скрола по горизонтали
-    overflow-y: auto; // Для скрола по вертикали
-    padding-bottom: 2px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: $header-height + $toolbar-height + $formula-height;
+  overflow-x: auto; // Для скрола по горизонтали
+  // overflow-y: auto; // Для скрола по вертикали
+  padding-bottom: 2px;
 
-    .row {
-        display: flex;
-        flex-direction: row;
-        min-height: 20px;
-        height: $row-height;
+  .row {
+    display: flex;
+    flex-direction: row;
+    min-height: 20px;
+    height: $row-height;
+  }
+  .row-info {
+    position: relative;
+    display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
+    justify-content: center;
+    align-items: center;
+    min-width: $info-sel-width;
+    height: 100%;
+    border: 1px solid $border-color;
+    background: #f8f9fa;
+    border-top: none;
+  }
+  .row-data {
+    display: flex; // Для того чтобы элементы ложились в линию (по умолчанию они по вертикали)
+  }
+
+  .column {
+    // Отвечает только за буквы сверху
+    position: relative; // Это связано с resize элементами .col-resize { в частности тут
+    display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
+    justify-content: center;
+    align-items: center;
+    background: #f8f9fa;
+    min-width: 40px;
+    width: $sell-width;
+    border: 1px solid $border-color;
+    height: 100%;
+    border-top: 0;
+    border-left: 0;
+  }
+
+  .cell {
+    min-width: 40px;
+    padding: 5px;
+    width: $sell-width;
+    height: 100%;
+    border: 1px solid #e2e3e3;
+    border-top: 0;
+    border-left: 0;
+    color: #111;
+    white-space: nowrap; // Так как потом в каждом Cell мы будем что прописывать
+    outline: none;
+
+    &.selected {
+      // Наследуемый класс для выделенной в текущей момент времени ячейки
+      border: none;
+      outline: 2px solid $primary-color;
+      z-index: 2;
     }
-    .row-info {
-        position: relative;
-        display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
-        justify-content: center;
-        align-items: center;
-        min-width: $info-sel-width;
-        height: 100%;
-        border: 1px solid $border-color;
-        background: #f8f9fa;
-        border-top: none;
+  }
+
+  // Обьединение Стилей под 1 селектор
+  .col-resize,
+  .row-resize {
+    // Это Делается для почти одинаковых описаний классов стилей, для избежания дублирования кода
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: $primary-color;
+    opacity: 0;
+    z-index: 1000;
+
+    &:hover {
+      opacity: 1 !important; // При наведении
     }
-    .row-data {
-        display: flex; // Для того чтобы элементы ложились в линию (по умолчанию они по вертикали)
+  }
 
+  .col-resize {
+    top: 0;
+    width: 4px;
+
+    &:hover {
+      // opacity: 1; // При наведении
+      cursor: col-resize; // Изменение вида курсора при наведении
     }
+  }
 
-    .column { // Отвечает только за буквы сверху
-        position: relative; // Это связано с resize элементами .col-resize { в частности тут
-        display: flex; // Самый простой способ выровнять элементы и по горизонтали и по вертикали внутри обьекта
-        justify-content: center;
-        align-items: center;
-        background: #f8f9fa;
-        min-width: 40px;
-        width: $sell-width;
-        border: 1px solid $border-color;
-        height: 100%;
-        border-top:0;
-        border-left:0;
+  .row-resize {
+    // right: 0; // Порядок важен
+    left: 0;
+    height: 4px;
+
+    &:hover {
+      // opacity: 1; // При наведении
+      cursor: row-resize; // Изменение вида курсора при наведении
     }
-
-    .cell {
-        min-width: 40px;
-        padding: 5px;
-        width: $sell-width;
-        height: 100%;
-        border: 1px solid #e2e3e3;
-        border-top:0;
-        border-left:0;
-        color:#111;
-        white-space: nowrap; // Так как потом в каждом Cell мы будем что прописывать
-        outline:none;
-
-        &.selected { // Наследуемый класс для выделенной в текущей момент времени ячейки
-            border: none;
-            outline: 2px solid $primary-color;
-            z-index: 2;
-        }
-    }
-
-
-
-    // Обьединение Стилей под 1 селектор
-    .col-resize, .row-resize { // Это Делается для почти одинаковых описаний классов стилей, для избежания дублирования кода
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background: $primary-color;
-        opacity: 0; 
-        z-index: 1000;
-
-        &:hover {
-            opacity: 1!important; // При наведении
-        }
-    }
-
-
-
-    .col-resize {
-        // position: absolute;
-        top: 0;
-        // bottom: 0;
-        // right: 0;
-        // opacity: 0; // Для Этого элемента, так как он по умолчания должен быть невидим, только при наведении мыши
-        width: 4px;
-        // background: $primary-color;
-
-        &:hover {
-            // opacity: 1; // При наведении
-            cursor: col-resize; // Изменение вида курсора при наведении
-        }
-    }
-
-    .row-resize { 
-        // position: absolute;
-        // right: 0; // Порядок важен
-        left: 0;
-        // bottom: 0;
-        // opacity: 0; // Для Этого элемента, так как он по умолчания должен быть невидим, только при наведении мыши
-        height: 4px;
-        // background: $primary-color;
-
-        &:hover {
-            // opacity: 1; // При наведении
-            cursor: row-resize; // Изменение вида курсора при наведении
-        }
-    }
+  }
 }

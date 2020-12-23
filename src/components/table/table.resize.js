@@ -34,11 +34,10 @@ export function resizeHandler($root, event) {
       } else {
         $parent.css({ height: value + 'px' });
       }
-
-      // Вызываем этот промис: т.к. ЛК мышки поднята
       resolve({
         value,
-        id: type === 'col' ? $parent.data.col : null,
+        type,
+        id: $parent.data[type],
       });
 
       $resizer.css({

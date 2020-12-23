@@ -5,19 +5,17 @@ export function createStore(rootReducer, initialState = {}) {
     subscribe(fn) {
       listeners.push(fn);
       return {
-        // Не функцию, а обьект уже
         unsubscribe() {
           listeners = listeners.filter((l) => l !== fn);
         },
       };
     },
     dispatch(action) {
-      state = rootReducer(state, action); // state тут это старый state не измененный; state = Тут Получается state переопределили
+      state = rootReducer(state, action);
       listeners.forEach((listener) => listener(state));
     },
     getState() {
-      // Потом улучшим
-      return state;
+      return JSON.parse(JSON.stringify(state));
     },
   };
 }

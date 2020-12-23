@@ -13,9 +13,44 @@ export function range(start, end) {
 }
 
 export function storage(key, data = null) {
-  // Сдлеаем как геттер и сеттер одновременно
   if (!data) {
-    return JSON.parse(localStorage.getItem(key)); // Если нет данных парсим то что в LocalStorage
+    return JSON.parse(localStorage.getItem(key));
   }
-  localStorage.setItem(key, JSON.stringify(data)); // Если есть данные, закидываем их
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+export function isEqual(a, b) {
+  if (typeof a === 'object' && typeof b === 'object') {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+  return a === b;
+}
+
+export function camelToDashCase(str) {
+  return str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+}
+
+export function toInlineStyles(styles = {}) {
+  return Object.keys(styles)
+    .map((key) => `${camelToDashCase(key)}: ${styles[key]}`)
+    .join(';');
+}
+
+export function debounce(fn, wait) {
+  // Для оптимизации, чтобы не каждый клик летел на сервер, вдруг вместо localStorage
+  // debounce принимает в себя функцию и количество милисекунд wait
+  // debounce - Это функция высокого порядка, которая возвращает новую функцию; Модифицирует
+  let timeout;
+  return function (...args) {
+    //
+    const later = () => {
+      clearTimeout(timeout);
+      // eslint-disable-next-line
+      fn.apply(this, args);
+      // fn(...args);
+    };
+    clearTimeout(timeout); // Т.е. снаружи тоже если не почищен, то его лучше чистить
+    // Было timeout = setTimeout(() => {}, wait); // timeout запускаем через то кол-во милилисек которое передавали
+    timeout = setTimeout(later, wait);
+  };
 }

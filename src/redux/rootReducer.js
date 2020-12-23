@@ -1,27 +1,55 @@
-import { TABLE_RESIZE } from './types';
+import {
+  CHANGE_TEXT,
+  CHANGE_STYLES,
+  TABLE_RESIZE,
+  APPLY_STYLE,
+  CHANGE_TITLE,
+} from './types';
 
-// Pure FUnction
 export function rootReducer(state, action) {
-  // Теперь, после тго как в Table.js задиспатчили, в этой функции есть эти значения !!
-  // Пропишем action Type
-  let prevState;
-  switch (
-    action.type // action.type Это строка говорящая о том какое именно поле надо изменить
-  ) {
-    case TABLE_RESIZE: // Это константа из файла types.js
-      prevState = state.colState || {}; // Это предыдущее состояние state; и если оно не определено вдруг, то {} пустой обьект
-      prevState[action.data.id] = action.data.value;
+  let field;
+  let val;
+  switch (action.type) {
+    case TABLE_RESIZE:
+      field = action.data.type === 'col' ? 'colState' : 'rowState';
       return {
-        // Тут нельзя мутировать state, надо всегда возвращать старый state
-        ...state, // Так с помощью спред оператора разворачиваем сам state
-        colState:
-          // Для реализации этого надо id, value
-          // В такой реализации, мы перетираем colState а надо его совмещать, конкатинировать
-          // Было, пока не добавили предыдущее состояние action.data, // Из Table.js передаём // Тут будем описывать данные которые будут прилетать в самом action
-          prevState,
+        ...state,
+        [field]: value(state, field, action),
       };
+    case CHANGE_TEXT:
+      field = 'dataState';
+      return {
+        ...state,
+        currentText: action.data.value,
+        [field]: value(state, field, action),
+      };
+
+    case CHANGE_STYLES:
+      return {
+        ...state,
+        currentStyles: action.data,
+      };
+
+    case APPLY_STYLE:
+      field = 'stylesState';
+      val = state[field] || {};
+      action.data.ids.forEach((id) => {
+        val[id] = { ...val[id], ...action.data.value };
+      });
+      return {
+        ...state,
+        [field]: val,
+        currentStyles: { ...state.currentStyles, ...action.data.value },
+      };
+    case CHANGE_TITLE:
+      return { ...state, title: action.data };
     default:
       return state;
   }
-  // Было сперва тут return state;
+}
+
+function value(state, field, action) {
+  const val = state[field] || {};
+  val[action.data.id] = action.data.value;
+  return val;
 }
