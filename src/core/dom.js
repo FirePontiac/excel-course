@@ -14,12 +14,12 @@ class Dom {
   }
 
   text(text) {
-    if (typeof text === 'string') {
+    if (typeof text === 'string' || typeof text === 'number') {
+      // Или typeof text !== 'undefined'
+      // Был Bug ; Недописали вариант typeof text === 'number'; чтобы отрабатывала функция eval
       this.$el.textContent = text;
-      return this; // Это если текст есть то так поступаем
+      return this;
     }
-    // А если текста нет, то:
-    // С Input строка снизу не сработает, поэтому добавим проверку:
     if (this.$el.tagName.toLowerCase() === 'input') {
       return this.$el.value.trim();
     }
@@ -27,7 +27,7 @@ class Dom {
   }
 
   clear() {
-    this.html = '';
+    this.html('');
     return this;
   }
   on(eventType, callback) {
@@ -69,6 +69,15 @@ class Dom {
       this.$el.style[key] = styles[key];
     });
   }
+
+  getStyles(styles = []) {
+    // Как параметр сюда передаём массив ключей стилей
+    return styles.reduce((res, s) => {
+      res[s] = this.$el.style[s];
+      return res;
+    }, {});
+  }
+
   id(parse) {
     if (parse) {
       const parsed = this.id().split(':');
@@ -84,6 +93,16 @@ class Dom {
     this.$el.focus();
     return this;
   }
+
+  attr(name, value) {
+    // Для простоты взаимодействия с атрибутом
+    if (value) {
+      this.$el.setAttribute(name, value);
+      return this;
+    }
+    return this.$el.getAttribute(name);
+  }
+
   addClass(className) {
     this.$el.classList.add(className);
     return this;
