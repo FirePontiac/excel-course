@@ -3,9 +3,9 @@ import {
   CHANGE_STYLES,
   CHANGE_TITLE,
   TABLE_RESIZE,
+  CHANGE_TEXT,
+  UPDATE_DATE,
 } from './types';
-import { CHANGE_TEXT } from './types';
-// Action creator; Обьекты создающиеся для Redux
 export function tableResize(data) {
   return {
     type: TABLE_RESIZE,
@@ -19,7 +19,11 @@ export function changeText(data) {
     data,
   };
 }
-
+export function updateDate() {
+  return {
+    type: UPDATE_DATE,
+  };
+}
 export function changeStyles(data) {
   return {
     type: CHANGE_STYLES,
@@ -32,7 +36,6 @@ export function applyStyle(data) {
     data,
   };
 }
-
 export function changeTitle(data) {
   return {
     type: CHANGE_TITLE,

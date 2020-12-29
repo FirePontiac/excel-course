@@ -12,7 +12,6 @@ export class Emitter {
     });
     return true;
   }
-
   subscribe(event, fn) {
     this.listeners[event] = this.listeners[event] || [];
     this.listeners[event].push(fn);

@@ -12,11 +12,12 @@ class Dom {
     }
     return this.$el.outerHTML.trim();
   }
-
+  clear() {
+    this.html('');
+    return this;
+  }
   text(text) {
-    if (typeof text === 'string' || typeof text === 'number') {
-      // Или typeof text !== 'undefined'
-      // Был Bug ; Недописали вариант typeof text === 'number'; чтобы отрабатывала функция eval
+    if (typeof text !== 'undefined') {
       this.$el.textContent = text;
       return this;
     }
@@ -25,22 +26,15 @@ class Dom {
     }
     return this.$el.textContent.trim();
   }
-
-  clear() {
-    this.html('');
-    return this;
-  }
   on(eventType, callback) {
     this.$el.addEventListener(eventType, callback);
   }
   del(eventType, callback) {
     this.$el.removeEventListener(eventType, callback);
   }
-
   find(selector) {
     return $(this.$el.querySelector(selector));
   }
-
   append(node) {
     if (node instanceof Dom) {
       node = node.$el;
@@ -69,7 +63,6 @@ class Dom {
       this.$el.style[key] = styles[key];
     });
   }
-
   getStyles(styles = []) {
     // Как параметр сюда передаём массив ключей стилей
     return styles.reduce((res, s) => {
@@ -77,7 +70,6 @@ class Dom {
       return res;
     }, {});
   }
-
   id(parse) {
     if (parse) {
       const parsed = this.id().split(':');
@@ -88,12 +80,10 @@ class Dom {
     }
     return this.data.id;
   }
-
   focus() {
     this.$el.focus();
     return this;
   }
-
   attr(name, value) {
     // Для простоты взаимодействия с атрибутом
     if (value) {
@@ -102,7 +92,6 @@ class Dom {
     }
     return this.$el.getAttribute(name);
   }
-
   addClass(className) {
     this.$el.classList.add(className);
     return this;
@@ -112,11 +101,9 @@ class Dom {
     return this;
   }
 }
-
 export function $(selector) {
   return new Dom(selector);
 }
-
 $.create = (tagName, classes = '') => {
   const el = document.createElement(tagName);
   if (classes) {

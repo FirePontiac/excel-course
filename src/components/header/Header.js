@@ -3,40 +3,50 @@ import { $ } from '@core/dom';
 import { changeTitle } from '@/redux/actions';
 import { defaultTitle } from '@/constants';
 import { debounce } from '@core/utils';
-
+import { ActiveRoute } from '../../core/routes/ActiveRoute';
 export class Header extends ExcelComponent {
   static className = 'excel__header';
   constructor($root, options) {
     super($root, {
       name: 'Header',
-      listeners: ['input'],
+      listeners: ['input', 'click'],
       ...options,
     });
   }
-
   prepare() {
-    this.onInput = debounce(this.onInput, 300); // 300 Миллисекунд; Так теряем контект функции dispatch; Избавились переписам немного саму debounce
+    this.onInput = debounce(this.onInput, 300);
   }
-
   toHTML() {
-    const title = this.store.getState().title || defaultTitle; // Так получаем поле Title; если не определено то defaultTitle
+    const title = this.store.getState().title || defaultTitle;
     return `
         <input type="text" class="input" value="${title}"/> 
         <div>
-            <div class="button">
-                <i class="material-icons">delete</i>
+            <div class="button" data-button="remove">
+                <i class="material-icons" data-button="remove">delete</i>
             </div>
-            <div class="button">
-                <i class="material-icons">exit_to_app</i>
+            <div class="button" data-button="exit">
+                <i class="material-icons" data-button="exit">exit_to_app</i>
             </div>
         </div>
         `;
   }
+  onClick(event) {
+    const $target = $(event.target);
+    if ($target.data.button === 'remove') {
+      const decision = confirm('Вы действительно хотите удалить эту таблицу?');
+      if (decision) {
+        // Если да, то
+        localStorage.removeItem('excel:' + ActiveRoute.param);
+        ActiveRoute.navigate('');
+      }
+    } else if ($target.data.button === 'exit') {
+      // Выйти из таблицы, - Значит изменить роут !
+      ActiveRoute.navigate('');
+    }
+  }
   onInput(event) {
-    // Это тоже вызывается на каждое нажатие, Надо задебаунсить
-    const $target = $(event.target); // $target Обёртка события event
-    // Далее надо задиспатчить то что ввели в инпут, т.е. то что было записано в store
-    this.$dispatch(changeTitle($target.text())); // Так забираем текст из текущего инпута
+    const $target = $(event.target);
+    this.$dispatch(changeTitle($target.text()));
     // Добавили debounce, теперь реже будем что то диспатчить в store
   }
 }

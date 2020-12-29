@@ -16,11 +16,9 @@ export class Formula extends ExcelComponent {
         <div id="formula" class="input" contenteditable spellcheck="false"></div>
         `;
   }
-
   init() {
     super.init();
     this.$formula = this.$root.find('#formula'); // А так 1 запрос к DOM дереву
-
     this.$on('table:select', ($cell) => {
       // Было this.$formula.text($cell.text());
       this.$formula.text($cell.data.value);
@@ -29,14 +27,9 @@ export class Formula extends ExcelComponent {
   storeChanged({ currentText }) {
     this.$formula.text(currentText);
   }
-
   onInput(event) {
-    // const text = $(event.target.text());
-    // debugger;
-    this.$emit('formula:input', $(event.target).text()); // Стало, По этому методу получаем Текст
-    // this.$emit('formula:input', text);
+    this.$emit('formula:input', $(event.target).text());
   }
-
   onKeydown(event) {
     const keys = ['Enter', 'Tab'];
     if (keys.includes(event.key)) {

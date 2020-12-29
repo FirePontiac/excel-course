@@ -7,7 +7,6 @@ import { TableSelection } from '@/components/table/TableSelection';
 import * as actions from '@/redux/actions'; // Тут стоит импорт всего *
 import { defaultStyles } from '@/constants';
 import { parse } from '@core/parse';
-
 export class Table extends ExcelComponent {
   static className = 'excel__table';
   constructor($root, options) {
@@ -20,48 +19,36 @@ export class Table extends ExcelComponent {
   toHTML() {
     return createTable(20, this.store.getState());
   }
-
   prepare() {
     this.selection = new TableSelection();
   }
-
   init() {
     super.init();
     this.selectCell(this.$root.find('[data-id="0:0"]')); // id текущей ячейки
-
-    // Было this.$on('formula:input', (text) => {
     this.$on('formula:input', (value) => {
-      console.log(value);
-      // Про аттибут для формулы самой; поскольку attr возвращает обьект; Запишем в него ещё и текст
-      this.selection.current.attr('data-value', value).text(parse(value)); // parse Пока что не существует
-      //  Было  this.selection.current.text(text);
+      this.selection.current.attr('data-value', value).text(parse(value));
       this.updateTextInStore(value);
     });
-
     this.$on('formula:done', () => {
       this.selection.current.focus();
     });
-
     this.$on('toolbar:applyStyle', (value) => {
       this.selection.applyStyle(value);
       this.$dispatch(
         actions.applyStyle({
           value, // Это текущий стиль
-          ids: this.selection.selectedIds, // Это то что прилетаем в action creator
+          ids: this.selection.selectedIds,
         })
-      ); // Задиспатчили новый action creator
+      );
     });
   }
   selectCell($cell) {
     this.selection.select($cell);
     this.$emit('table:select', $cell);
-    // Было const styles = $cell.getStyles(['fontWeight', 'fontStyle', 'textAlign']);
     const styles = $cell.getStyles(Object.keys(defaultStyles));
-
     console.log('Styles to dispatch', styles);
-    this.$dispatch(actions.changeStyles(styles)); // Внутрь передали обьект (styles)
+    this.$dispatch(actions.changeStyles(styles));
   }
-
   async resizeTable(event) {
     try {
       const data = await resizeHandler(this.$root, event);
@@ -85,7 +72,6 @@ export class Table extends ExcelComponent {
       }
     }
   }
-
   onKeydown(event) {
     const keys = [
       'Enter',
@@ -103,7 +89,6 @@ export class Table extends ExcelComponent {
       this.selectCell($next);
     }
   }
-
   updateTextInStore(value) {
     this.$dispatch(
       actions.changeText({
@@ -112,8 +97,7 @@ export class Table extends ExcelComponent {
       })
     );
   }
-
   onInput(event) {
-    this.updateTextInStore($(event.target).text()); // $(event.target).text() - Там мы достаём текст из Ячейки
+    this.updateTextInStore($(event.target).text());
   }
 }
