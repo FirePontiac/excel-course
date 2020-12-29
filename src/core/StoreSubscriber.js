@@ -1,5 +1,4 @@
 import { isEqual } from '@core/utils';
-
 export class StoreSubscriber {
   constructor(store) {
     this.store = store;
@@ -20,6 +19,10 @@ export class StoreSubscriber {
         }
       });
       this.prevState = this.store.getState();
+      // Это для защиты
+      if (process.env.NODE_ENV === 'development') {
+        window['redux'] = this.prevState;
+      }
     });
   }
   unsubscribeFromStore() {

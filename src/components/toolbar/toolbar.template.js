@@ -52,6 +52,5 @@ export function createToolbar(state) {
       },
     },
   ];
-
   return buttons.map(toButton).join('');
 }

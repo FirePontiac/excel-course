@@ -15,7 +15,6 @@ export function matrix($target, $current) {
     return acc;
   }, []);
 }
-
 export function nextSelection(key, { col, row }) {
   const MIN_VALUE = 0;
   switch (key) {
