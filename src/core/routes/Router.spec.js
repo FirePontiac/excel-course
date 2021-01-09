@@ -1,6 +1,5 @@
 import { Router } from './Router';
 import { Page } from '../Page';
-// import { $ } from '../dom';
 
 class DashboardPage extends Page {
   // перепишем метод, так как это моковая реализация и тут можно что угодно

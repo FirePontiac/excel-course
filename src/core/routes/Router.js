@@ -1,6 +1,7 @@
 import { $ } from '@core/dom';
 // import { $ } from '../dom'; // Это для Тестов
 import { ActiveRoute } from '@core/routes/ActiveRoute';
+import { Loader } from '../../components/Loader';
 // import { ActiveRoute } from './ActiveRoute'; // Это для Тестов
 export class Router {
   // Не будет ни от чего наследоваться, существует сам по себе
@@ -14,6 +15,9 @@ export class Router {
     // эту чтобы у неё были необходимые методы
     this.$placeholder = $(selector);
     this.routes = routes;
+
+    this.loader = new Loader(); // Функциональный компонент
+
     this.page = null;
     this.changePageHandler = this.changePageHandler.bind(this);
     // Основываясь на текущем URL адресе
@@ -23,11 +27,12 @@ export class Router {
     window.addEventListener('hashchange', this.changePageHandler);
     this.changePageHandler();
   }
-  changePageHandler() {
+
+  async changePageHandler() {
     if (this.page) {
       this.page.destroy();
     }
-    this.$placeholder.clear();
+    this.$placeholder.clear().append(this.loader);
     // И в зависимости от этого роута показывать нужную страницу
     // ActiveRoute позволяет определить текущий URL
     const Page = ActiveRoute.path.includes('excel')
@@ -36,8 +41,12 @@ export class Router {
       : this.routes.dashboard; // Так Роутим и парсим нужную страницу
     this.page = new Page(ActiveRoute.param); // Это создали инстанс класса
     // ActiveRoute.param Это параметры в URL
-    this.$placeholder.append(this.page.getRoot());
+
+    const root = await this.page.getRoot();
+    // Было this.$placeholder.append(this.page.getRoot());
     // Вставляет HTML шаблон в placeholder
+
+    this.$placeholder.clear().append(root);
     this.page.afterRender();
   }
   // Именно Роутер сигнализирует о том что

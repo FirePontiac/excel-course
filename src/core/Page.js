@@ -2,7 +2,8 @@ export class Page {
   // Это Будет Интерфейс, т.к. в JS нет интерфейсов,
   // то наследуемся от базового класса
   constructor(params) {
-    this.params = params; // Далее это понадобится для какого либо Excel
+    // Далее это понадобится для какого либо Excel
+    this.params = params || Date.now().toString();
   }
   getRoot() {
     throw new Error('Method "getRoot" should be implemented');
