@@ -1,5 +1,7 @@
 import { $ } from '@core/dom';
+// import { $ } from '../dom'; // Это для Тестов
 import { ActiveRoute } from '@core/routes/ActiveRoute';
+// import { ActiveRoute } from './ActiveRoute'; // Это для Тестов
 export class Router {
   // Не будет ни от чего наследоваться, существует сам по себе
   constructor(selector, routes) {
